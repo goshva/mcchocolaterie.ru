@@ -1,0 +1,248 @@
+{% load static %}
+{% load cart %}
+
+
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>E-commerce Website</title>
+
+  <style>
+  .truncate {
+    padding: 10px; /* Поля вокруг текста */
+    white-space: nowrap; /* Текст не переносится */
+    overflow: hidden; /* Обрезаем всё за пределами блока */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+   }
+    nav{
+      background-color: white;
+    }
+    .one-edge-shadow {
+              box-shadow: 0 8px 2px -5px rgb(246, 245, 245);
+}
+.row{
+  width: 100%;
+}
+.display-8{
+  font-weight: 200;
+  font-size: 30px;
+  font-colour: $teal-200;
+}
+.site-main,
+.site-cat,
+.site-info {
+  list-style-type: none;
+  padding: 0;
+  color: #474747;
+}
+.site-main-item > a{
+  color: white;
+  text-decoration: none;
+}
+
+.cart-icon{
+  position: fixed;
+  top: 15%;
+  left: 90%;
+  z-index: 1;
+  opacity: 75%;
+  background: white;
+
+  border: 1px solid orange;
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  transform: scale(1);
+  transition: transform .5s;
+}
+.cart-icon:hover{
+  transform: scale(1.25);
+  transition: transform .5s;
+}
+.bi {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 50px;
+  height: 50px;
+}
+.cart-link{
+  color: orange;
+}
+.cart-quant{
+  position: absolute;
+  top: 75%;
+  left: 65%;
+  width: 25px;
+  height: 25px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: orange;
+  text-align: center;
+}
+  </style>
+</head>
+
+<body>
+  <!-- navbar -->
+
+<nav class="one-edge-shadow
+  navbar navbar-light
+  sticky-top navbar 
+  navbar-expand-lg
+  text-white">
+    <a class="navbar-brand ms-3 text-dark " href="/">
+    <img src="{% static 'logo.png' %}" style="width:50px;height:50px,color:text-light;"></a>
+
+    <a class="d-block d-sm-none nav-link" href="/cart" style="color: black">В корзине
+      <span class="badge badge-warning">{{products|cart_total:request.session.cart}}</span>
+      <span class="sr-only">(current)</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/store">Каталог <span class="sr-only">(current)</span></a>
+        </li>
+
+          </ul>
+
+
+
+
+      <ul class=" navbar-nav my-2 my-lg-0">
+
+        <li class="nav-item active">
+          <a class="nav-link" href="/contacts">Контакты</a>
+        </li>
+        
+
+        {% if request.session.customer %}
+        
+        <li class="nav-item active ">
+          <a class="nav-link" href="/orders">Заказы<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="/logout">Выйти<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+       
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">Регистрация<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Войти<span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+
+
+      </ul>
+
+
+    </div>
+  </nav>
+
+  {% if request.session.cart %}
+  <div class="cart-icon d-none d-sm-block">
+    <a href="cart" class="cart-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
+        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+      </svg>
+    </a>
+    <span class="cart-quant">
+      {{products|cart_total:request.session.cart}}
+    </span>
+  </div>
+  {% endif %}
+  <!---->
+
+  {% block content %}{% endblock %}
+
+  <!--footer-->
+  <footer>
+    <div class="" style="padding: 75px 0 45px 0; gap: 5%; color: #474747; background-color: #111111; max-width: 100%; width: auto;">
+      <div class="row">
+          <div class="col-11 col-lg-2 offset-1 offset-lg-2" style="display: flex; flex-direction: column; gap: 25px" >
+              <a href="store">
+                <img src="../static/logo.png" style="max-width: 120px; width: 100%;"/>
+              </a>
+              <a href="https://www.instagram.com/mc_chocolaterie/" style="max-width: 30px; width: 30px; max-height: 30px; height: 30px;">
+                <svg >
+                  <path style="fill:#525252;" d="M15,11.014 C12.801,11.014 11.015,12.797 11.015,15 C11.015,17.202 12.802,18.987 15,18.987 C17.199,18.987 18.987,17.202 18.987,15 C18.987,12.797 17.199,11.014 15,11.014 L15,11.014 Z M15,17.606 C13.556,17.606 12.393,16.439 12.393,15 C12.393,13.561 13.556,12.394 15,12.394 C16.429,12.394 17.607,13.561 17.607,15 C17.607,16.439 16.444,17.606 15,17.606 L15,17.606 Z"></path>
+                  <path style="fill:#525252;" d="M19.385,9.556 C18.872,9.556 18.465,9.964 18.465,10.477 C18.465,10.989 18.872,11.396 19.385,11.396 C19.898,11.396 20.306,10.989 20.306,10.477 C20.306,9.964 19.897,9.556 19.385,9.556L19.385,9.556 Z"></path>                  <path style="fill:#525252;" d="M15.002,0.15 C6.798,0.15 0.149,6.797 0.149,15 C0.149,23.201 6.798,29.85 15.002,29.85 C23.201,29.85 29.852,23.202 29.852,15 C29.852,6.797 23.201,0.15 15.002,0.15 L15.002,0.15 Z M22.666,18.265 C22.666,20.688 20.687,22.666 18.25,22.666 L11.75,22.666 C9.312,22.666 7.333,20.687 7.333,18.28 L7.333,11.734 C7.333,9.312 9.311,7.334 11.75,7.334 L18.25,7.334 C20.688,7.334 22.666,9.312 22.666,11.734 L22.666,18.265 L22.666,18.265 Z"></path>
+                </svg>
+              </a>
+              <p>
+                © 2021 MC Chocolaterie<br>
+                ИП Маилян Даниэла Артуровна (ИНН:<br>
+                231530683574, ОГРНИП:<br>
+                320237500285920)<br>
+              </p>
+          </div>
+          <div class="col-11 col-lg-2 offset-1 offset-lg-0">
+            <h5>ГЛАВНАЯ</h5>
+            <ul class="site-main" style="color: white;">
+              <li class="site-main-item">
+                <a href="/store">Главная</a>
+              </li>
+              <li class="site-main-item">
+                <a href="#">О бутике</a>
+              </li>
+              <li class="site-main-item">
+                <a href="#">Отызвы</a>
+              </li>
+              <li class="site-main-item">
+                <a href="/contacts">Контакты</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-11 col-lg-2 offset-1 offset-lg-0">
+            <h5>ИНФОРМАЦИЯ</h5>
+            <ul class="site-info">
+              <li class="site-main-item">
+                <a href="#">Доставка</a>
+              </li>
+              <li class="site-main-item">
+                <a href="#">Вакансии</a>
+              </li>
+              <li class="site-main-item">
+                <a href="#">Эксклюзивные работы</a>
+              </li>
+              <li class="site-main-item">
+                <a href="#">Статьи и рецепты</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

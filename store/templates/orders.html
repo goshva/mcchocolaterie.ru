@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+<div class="container col col-md-10 col-sm-8 col-lg-7 col-xl-6 my-3 p-3 border rounded border-warning">
+    <h2 class="border-bottom border-warning">Заказы</h2>
+
+    {% for order in orders %}
+        <div class="order-item border-bottom py-3 border-warning">
+            <h4 class="">{{order.product.name}}</h4>
+            <div class="item row ">
+                <div class="item-image col-sm-8 col-md-5 col-xl-5">
+                    {% if product.image %}
+                        <img class="card-img-top" src="{{ order.product.image.url }}" alt="Card image cap" class="rounded-circle" style="width: 204px;"/>
+                    {% else %}
+                        <a href="admin/store/products/{{ order.product.id }}/change/" id="{{ order.product.id }}" target="_blank">
+                            <img class="card-img-top" src="{{ order.product.photo_url }}" alt="Card image cap" class="rounded-circle" style="width: 204px;"/>
+                        </a>
+                    {% endif %}
+                    
+                </div>
+                <div class="order-info col-sm-3 col-md-3 col-xl-3">
+                    <p>Количество: <br>{{order.quantity}} <br> </p>
+                    <p>Цена за шт: <br> {{order.price|currency}} <br> </p>
+                    <p>Итого: <br> {{order.quantity|multiply:order.price|currency}} <br> </p>
+                </div>
+                <div class="col-md-2 col-xl-3">
+                    <p>Дата заказа: <br>{{order.date}}</p>
+                    <p>Адресс: <br>{{ order.address }}</p>
+                    <p>Статус: <br>
+                        {% if order.status %}
+                            <small class="badge badge-success">Заврешено</small>
+                        {%else%}
+                            <small class="badge badge-warning">В процессе</small>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

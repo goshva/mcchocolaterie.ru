@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+{% load thumbnail %}
+
+
+<div class="container col col-sm-8 col-lg-7 col-xl-5 p-3 my-3 border rounded border-warning">
+
+    <h2 class="border-bottom border-warning">Ваша корзина</h2>
+    {% for product in products %}
+    <div class="cart-item my-3 border-bottom border-warning">
+      <h5>{{product.name}}</h5>
+      <div class="item row my-3">
+        <div class="col-8 col-lg-6 item-image">
+          
+          {% if product.image %}
+            {% thumbnail product.image "153x204" padding=True crop="center" as item %}
+            <img class="card-img-top" src="{{ item.url }}" alt="Card image cap" style="width: 204px;"/>
+            {% endthumbnail %}
+          {% endif %}
+        </div>
+        <div class="col-4 col-lg-4 item-info">
+          <p>Количество: </p>
+            <div class="row">
+              <form action="cart" method="post" class="col" style="display: flex; gap: 5px;">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" name='inc' value=" + " class="btn">
+								<p class="text-center">{{product|cart_quantity:request.session.cart}} шт.</p>
+								<input type="submit" name='dec' value=" - "
+									class="btn ">
+							</form>
+        </div>
+
+          {% if products|total_cart_price:request.session.cart >= 20000 %}
+          <p>Цена за шт: <br> {{product.price_many|currency}}</p>
+          <p>Итого: <br> {{product|many_discount:request.session.cart|currency}}</p>
+
+          {% elif products|total_cart_price:request.session.cart >= 10000 %}
+          <p>Цена за шт: <br> {{product.price_20k|currency}}</p>
+          <p>Итого: <br> {{product|20k_discount:request.session.cart|currency}}</p>
+
+          {% elif  products|total_cart_price:request.session.cart >= 5000 %}
+          <p>Цена за шт: <br> {{product.price_10k|currency}}</p>
+          <p>Итого: <br> {{product|10k_discount:request.session.cart|currency}}</p>
+
+          {% else %}
+          <p>Цена за шт: <br> {{product.price_5k|currency}}</p>
+          <p>Итого: <br> {{product|price_total:request.session.cart|currency}}</p>
+          {% endif %}
+          <form action="/cart" method="post">
+            {% csrf_token %}
+            <input hidden type="text" name='product' value='{{product.id}}'>
+            <input type="submit" name='remove' value="Удалить"
+              class="btn btn-outline-warning btn-block">
+          </form>
+        </div>
+    </div>
+  </div>
+  
+  {% endfor %}
+  <div class="cart-total px-3 mx-3" style="display: flex; justify-content: flex-end;">
+    <p><b> Итого: </b>{{products|total_cart_price:request.session.cart|currency}}</p>
+  </div>
+  {% if products|total_cart_price:request.session.cart > 0 %}
+  <div class="p-3 m-3">
+    <a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-warning border rounded  col-lg-3 float-right">Подтвердить</a>
+  </div>
+  {% else %}
+    <div class="p-3 m-3">
+      <a href="#" class="btn btn-secondary border rounded  col-lg-3 float-right">Подтвердить</a>
+    </div>
+  {% endif %}
+</div>
+
+<!-- modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+              Форма заказа
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form action="/check-out" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="">Адрес</label>
+                  <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                  
+                </div>
+                <div class="form-group">
+                    <label for="">Телефон</label>
+                    <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                  </div>
+
+                  <input type="submit" class="btn float-right btn-outline-warning col-lg-6" value="Подтвердить">
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

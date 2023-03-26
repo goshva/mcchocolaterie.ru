@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+
+<!-- body -->
+<div class="container-fluid mt-3">
+	<div class="row">
+
+		
+
+		<!-- filter -->
+		<div class="col-lg-3 mx-auto mb-3">
+			<div class="list-group">
+
+				<a href="/" class="list-group-item list-group-item-action btn btn-outline-warning">Весь ассортимент</a>
+
+				{% for category in categories %}
+				<a href="/?category={{category.id}}"
+					class="list-group-item list-group-item-action btn btn-outline-warning truncate">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-9 mx-auto">
+			<div class="row mx-auto">
+				{% for product in products %}
+				<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
+					{% if product.image %}
+					<img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap" />
+					{% else %}
+					<a href="admin/store/products/{{ product.id }}/change/" id="{{ product.id }}" target="_blank">
+						<img class="card-img-top" src="{{ product.photo_url }}" alt="Card image cap"
+							style="border: 1px solid red;" />
+					</a>
+					{% endif %}
+					<div class="card-body">
+						<p class="card-title">{{product.name}}</p>
+						<p class="card-text"><b>{{product.price_5k|currency}}</b></p>
+
+						<button class="btn btn-ligth btn-block" type="button" data-toggle="modal"
+							data-target="#modalWin{{product.id}}">
+							Подробнее...
+						</button>
+						</p>
+
+						{% if product|is_in_cart:request.session.cart %}
+						<p>{{product|cart_quantity:request.session.cart}} в корзине</p>
+						{% endif %}
+
+						<div class="modal" id="modalWin{{product.id}}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title">
+											{{product.name}} {{product.article}}
+										</h5>
+									</div>
+									<div class="modal-body">
+										<ul class="list-group list-group list-group-flush">
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.title}}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.discription}}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.text }} {{good.text }}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.kind }}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.name }}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.article }}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												{{product.color }}
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												<small>Цена</small>
+												<span class="badge badge-primary badge-pill">{{product.price_5k}}₽</span>
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												<small>при заказе от 5000₽</small>
+												<span
+													class="badge badge-primary badge-pill">{{product.price_10k}}₽</span>
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												<small>при заказе от 10000₽</small>
+												<span
+													class="badge badge-primary badge-pill">{{product.price_20k}}₽</span>
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												<small>при заказе от 20000₽</small>
+												<span
+													class="badge badge-primary badge-pill">{{product.price_many}}₽</span>
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												Размер(см)
+												<span class="badge badge-primary badge-pill">{{product.size }}</span>
+											</li>
+											<li
+												class="list-group-item d-flex justify-content-between align-items-center">
+												Вес(гр)
+												<span class="badge badge-primary badge-pill">{{product.weight }}</span>
+											</li>
+										</ul>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary"
+											data-dismiss="modal">Закрыть</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+					<div class="card-footer p-0 no-gutters">
+
+						{% if product|is_in_cart:request.session.cart %}
+						
+						<div class="row no-gutters">
+							<form action="/#{{product.id}}" method="post" class="col d-flex  justify-content-between"  style="display: flex; gap: 5px;">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input class="col-5 form-control" type="number" value="1" max="99999" min="1" name='fixed'>
+								<input class="text-center float-right col-6 btn btn-warning" type="submit" name='add'
+								value=" В корзину">
+							</form>
+							
+						</div>
+						{% else %}
+						<form action="/#{{product.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input type="submit" class="btn btn-warning form-control" value="Добавить в корзину">
+						</form>
+						{% endif %}
+
+					</div>
+
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}
