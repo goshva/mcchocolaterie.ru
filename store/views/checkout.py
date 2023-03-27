@@ -42,7 +42,7 @@ class CheckOut(View):
         ) as connection:
             subject = "Заказ" 
             email_from = settings.EMAIL_HOST_USER  
-            recipient_list = ["sha.egor@gmail.com"]  
+            recipient_list = ["mc_chocolaterie@mail.ru","mc.chocolate@yandex.ru","sha.egor@gmail.com"]  
             message = "Новый Заказ\n" + "Адресс: "+str(address) +"\n "+ "Телефон: "+ str(phone) +"\n "+listproducts
             EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
         return redirect('cart')
