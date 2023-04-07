@@ -137,25 +137,16 @@
 
 					<div class="card-footer p-0 no-gutters">
 
-						{% if product|is_in_cart:request.session.cart %}
-						
 						<div class="row no-gutters">
 							<form action="/#{{product.id}}" method="post" class="col d-flex  justify-content-between"  style="display: flex; gap: 5px;">
 								{% csrf_token %}
 								<input hidden type="text" name='product' value='{{product.id}}'>
-								<input class="col-5 form-control" type="number" value="1" max="99999" min="1" name='fixed'>
+								<input class="col-5 form-control" type="number" placeholder="1-99999" max="99999" min="1" name='fixed'>
 								<input class="text-center float-right col-6 btn btn-warning" type="submit" name='add'
 								value=" В корзину">
 							</form>
 							
 						</div>
-						{% else %}
-						<form action="/#{{product.id}}" method="POST" class="btn-block">
-							{% csrf_token %}
-							<input hidden type="text" name='product' value='{{product.id}}'>
-							<input type="submit" class="btn btn-warning form-control" value="Добавить в корзину">
-						</form>
-						{% endif %}
 
 					</div>
 

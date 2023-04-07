@@ -27,13 +27,12 @@ class Index(View):
                     if add:
                             cart[product]  = quantity+int(fixed)
             else:
-                cart[product] = 1
+                cart[product] =int(fixed)
+                #cart[product] = 1
         else:
             cart = {}
-            cart[product] = 1
-        print(product)
+            cart[product] = int(fixed)
         request.session['cart'] = cart
-        print('cart' , request.session['cart'])
         return redirect('homepage')
 
 
