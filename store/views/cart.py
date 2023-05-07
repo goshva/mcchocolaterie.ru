@@ -27,6 +27,7 @@ class Cart(View):
         
         if inc:
             cart[product] += 1
+            print(cart[product])
         
         if dec:
             if(cart[product] - 1) == 0:

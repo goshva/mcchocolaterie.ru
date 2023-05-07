@@ -19,7 +19,7 @@ class CheckOut(View):
         print(address, phone, customer, cart, products)
         listproducts = ""
         for product in products:
-            print(cart.get(str(product.id)))
+            print(cart.get(str(product.article)))
             order = Order(customer=Customer(id=customer),
                           product=product,
                           price=product.price_5k,
@@ -27,7 +27,7 @@ class CheckOut(View):
                           phone=phone,
                           quantity=cart.get(str(product.id)))
             
-            listproducts = listproducts +  product.name  +":"+  str(cart.get(str(product.id)))+ "\n"
+            listproducts = listproducts +  product.name  +"("+  str(product.article)+"):"+ str(cart.get(str(product.id)))+ "\n"
 
             order.save()
         request.session['cart'] = {}
@@ -42,7 +42,7 @@ class CheckOut(View):
         ) as connection:
             subject = "Заказ" 
             email_from = settings.EMAIL_HOST_USER  
-            recipient_list = ["sha.egor@gmail.com"]  
+            recipient_list = ["mc_chocolaterie@mail.ru","mc.chocolate@yandex.ru","sha.egor@gmail.com"]  
             message = "Новый Заказ\n" + "Адресс: "+str(address) +"\n "+ "Телефон: "+ str(phone) +"\n "+listproducts
             EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
         return redirect('cart')
