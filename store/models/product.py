@@ -13,7 +13,7 @@ class Products(models.Model):
     kind = models.CharField(max_length=300, blank=True, null=True)
     category= models.ForeignKey(Category,on_delete=models.CASCADE,default=1, blank=True, null=True )
     description= models.CharField(max_length=250, default='', blank=True, null= True)
-    photo_url = models.CharField(max_length=3000,null=True)
+    photo_url = models.CharField(max_length=3000,null=True,blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=200, blank=True, null=True)
     description = models.CharField(max_length=300, blank=True, null=True)
